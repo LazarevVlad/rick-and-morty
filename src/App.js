@@ -25,8 +25,8 @@ const theme = extendTheme({ breakpoints })
 
 function App() {
   const [characters, setCharacters] = useState(undefined);
-  const [nextPageUrl, setNextPage] = useState();
-  const [prevPageUrl, setPrevPage] = useState();
+  const [nextPageUrl, setNextPage] = useState(null);
+  const [prevPageUrl, setPrevPage] = useState(null);
   const [currentPageUrl, setCurrentPageUrl] = useState("https://rickandmortyapi.com/api/character");
   const [selectedCharacter, setSelectedCharacter] = useState({
     visible: false,
@@ -39,18 +39,22 @@ function App() {
   })
 
   useEffect(() => {
+    let cleanupFunction = false;
     const url = currentPageUrl
     const fetchData = async () => {
       try {
         const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
-          setCharacters(data.results)
-          setNextPage(data.info.next)
-          setPrevPage(data.info.prev)
+          if(!cleanupFunction) {
+            setCharacters(data.results)
+            setNextPage(data.info.next)
+            setPrevPage(data.info.prev)
+          }
         }
         else {
           console.error(response.status)
+          setCharacters([])
         }
       }
       catch(err) {
@@ -59,6 +63,7 @@ function App() {
     }
 
     fetchData();
+    return () => cleanupFunction = true;
     }, [currentPageUrl])
 
   const nextPage = () => {
@@ -88,13 +93,13 @@ function App() {
     const fetchData = async () => {
       try {
         const response = await fetch(`https://rickandmortyapi.com/api/character/?${queryParams.toString()}`)
-        if (!response.ok) {
-          return { results: [] };
-        } else {
+        if (response.ok) {
           const data = await response.json();
           setCharacters(data.results);
           setNextPage(data.info.next);
           setPrevPage(data.info.prev);
+        } else {
+          setCharacters([])
         }
       }
       catch(err) {

@@ -21,6 +21,7 @@ export const Filters = ({ onFilter }) => {
         <FormControl>
           <FormLabel>Name</FormLabel>
           <Input
+            placeholder="name"
             value={filterValues.name}
             onChange={(e) => {
               setFilterValues((values) => ({
@@ -50,6 +51,7 @@ export const Filters = ({ onFilter }) => {
         <FormControl>
           <FormLabel>Species</FormLabel>
           <Input
+            placeholder="species"
             value={filterValues.species}
             onChange={(e) => {
               setFilterValues((values) => ({
@@ -62,6 +64,7 @@ export const Filters = ({ onFilter }) => {
         <FormControl>
           <FormLabel>Type</FormLabel>
           <Input
+            placeholder="type"
             value={filterValues.type}
             onChange={(e) => {
               setFilterValues((values) => ({
